@@ -12,11 +12,25 @@ _start:
 	popq	%rax
 	cmpq	$3, %rax
 	jne	.usage
-
-	movq	$60, %rax
-	movq	$60, %rdi
-	syscall
-
+	# rax = executable name
+	# rax = mode to be used
+	# r8  = message
+	popq	%rax
+	popq	%rax
+	popq	%r8
+	cmpq	$'m', %rax
+	je	.m_mode
+	cmpq	$'t', %rax
+	je	.t_mode
+	jmp	.usage
+.m_mode:
+	call	Morse
+	jmp	.leave
+.t_mode:
+	call	Text
+	jmp	.leave
+.leave:
+	EXIT	$0
 .usage:
 	PUTS	$2, .usage_msg(%rip), .usage_len(%rip)
 	EXIT	$1
