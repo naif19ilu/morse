@@ -31,6 +31,7 @@ _start:
 	call	Text
 	jmp	.leave
 .leave:
+	PUTU	$1
 	EXIT	$0
 .usage:
 	PUTS	$2, .usage_msg(%rip), .usage_len(%rip)

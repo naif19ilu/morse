@@ -12,5 +12,11 @@
 	syscall
 .endm
 
-.macro PUTA a
+.macro PUTU offset
+	leaq	Useful(%rip), %rsi
+	addq	\offset, %rsi
+	movq	$1, %rax
+	movq	$1, %rdi
+	movq	$1, %rdx
+	syscall
 .endm

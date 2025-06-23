@@ -14,7 +14,6 @@ Morse:
 	# r10 = Code itself
 	xorq	%r9, %r9
 	leaq	.code(%rip), %r10
-
 .m_loop:
 	movzbl	(%r8), %edi
 	cmpb	$0, %dil
@@ -38,11 +37,8 @@ Morse:
 	incq	%r10
 	jmp	.m_resume
 .m_complete:
-
 	leaq	.code(%rip), %rdi
-	call	.TrieGet	
-
-
+	call	.TrieGet
 	movq	%rax, %rbx
 	leaq	.trie(%rip), %rax
 	addq	%rbx, %rax
@@ -51,18 +47,15 @@ Morse:
 	movq	$1, %rdi
 	movq	$1, %rdx
 	syscall
-
 	movq	$0, (.code)
 	leaq	.code(%rip), %r10
 	xorq	%r9, %r9
 	jmp	.m_resume
-
 .m_space:
-
+	PUTU	$0
 .m_resume:
 	incq	%r8
 	jmp	.m_loop
-
 .m_return:
 	ret
 

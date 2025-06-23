@@ -80,3 +80,6 @@
 
         .globl Unknown
         Unknown: .string "<?>"
+
+        .globl Useful
+        Useful: .string " \n/"
