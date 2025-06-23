@@ -18,9 +18,10 @@ _start:
 	popq	%rax
 	popq	%rax
 	popq	%r8
-	cmpq	$'m', %rax
+	movzbl	(%rax), %edi
+	cmpb	$'m', %dil
 	je	.m_mode
-	cmpq	$'t', %rax
+	cmpb	$'t', %dil
 	je	.t_mode
 	jmp	.usage
 .m_mode:

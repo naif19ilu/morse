@@ -10,41 +10,48 @@
 .globl Morse
 
 Morse:
- 	# r9  = current morse code
-	# r10 = r9's length
-	leaq	.code(%rip), %r9
-	xorq	%r10, %r10
-.loop:
-	movzbl	(%r8), %edi
-	cmpb	$0, %dil
-	je	.return
-	cmpb	$'.', %dil
-	je	.ok
-	cmpb	$'-', %dil
-	je	.ok
-	cmpb	$' ', %dil
-	je	.print
-	cmpb	$'/', %dil
-	je	.space
-	jmp	.resume
-.ok:
- 	# The maximum length of a morse code is
-	# 5 characters, if 5 bytes were already
-	# written then we got a code to be translated
-	cmpq	$5, %r10
-	je	.print
-	movb	%dil, (%r9)
-	incq	%r9
-	incq	%r10
-	jmp	.resume
-.print:
-
-.space:
-
-.resume:
-	incq	%r8
-	jmp	.loop
-.return:
+	call	.TrieBuild
 	ret
 
 .TrieBuild:
+ 	# r9  = Current morse code (address)
+	# r10 = Number of codes parsed already
+	leaq	Code(%rip), %r9
+	xorq	%r10, %r10
+	xorq	%r11, %r11
+	xorq	%rdi, %rdi
+.tb_loop:
+	cmpq	$36, %r10
+	je	.tb_return
+	movq	(%r9), %rdi
+	call	.TrieGet
+
+	movq	%rax, %rdi
+	movq	$60, %rax
+	syscall
+
+	incq	%r10
+	addq	$8, %r9
+	jmp	.tb_loop
+.tb_return:
+	ret
+
+.TrieGet:
+	xorq	%rax, %rax
+	xorq	%rbx, %rbx
+.tg_loop:
+	movzbl	(%rdi), %ebx
+	cmpb	$0, %bl
+	je	.tg_return
+	shlq	$1, %rax
+	cmpb	$'.', %bl
+	je	.tg_dot	
+	addq	$2, %rax
+	jmp	.tg_resume
+.tg_dot:
+	addq	$1, %rax
+.tg_resume:
+	incq	%rdi
+	jmp	.tg_loop
+.tg_return:
+	ret
