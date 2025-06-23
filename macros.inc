@@ -11,3 +11,6 @@
 	movq	$60, %rax
 	syscall
 .endm
+
+.macro PUTA a
+.endm

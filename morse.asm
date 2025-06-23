@@ -1,16 +1,69 @@
 .section .bss
 	.trie: .zero 64
-
-.section .bss
- 	# Stores the current code in the message
 	.code: .zero 8
 
 .section .text
+
+.include "macros.inc"
 
 .globl Morse
 
 Morse:
 	call	.TrieBuild
+	# r9  = Code's length
+	# r10 = Code itself
+	xorq	%r9, %r9
+	leaq	.code(%rip), %r10
+
+.m_loop:
+	movzbl	(%r8), %edi
+	cmpb	$0, %dil
+	je	.m_return
+	# Store only morse character aka dot (.) and dash (-)
+	cmpb	$'.', %dil
+	je	.m_store
+	cmpb	$'-', %dil
+	je	.m_store
+	cmpb	$' ', %dil
+	je	.m_complete
+	cmpb	$'/', %dil
+	je	.m_space
+	PUTS	$1, Unknown(%rip), $3
+	jmp	.m_resume
+.m_store:
+	cmpq	$5, %r9
+	je	.m_complete
+	movb	%dil, (%r10)
+	incq	%r9
+	incq	%r10
+	jmp	.m_resume
+.m_complete:
+
+	leaq	.code(%rip), %rdi
+	call	.TrieGet	
+
+
+	movq	%rax, %rbx
+	leaq	.trie(%rip), %rax
+	addq	%rbx, %rax
+	movq	%rax, %rsi
+	movq	$1, %rax
+	movq	$1, %rdi
+	movq	$1, %rdx
+	syscall
+
+	movq	$0, (.code)
+	leaq	.code(%rip), %r10
+	xorq	%r9, %r9
+	jmp	.m_resume
+
+.m_space:
+
+.m_resume:
+	incq	%r8
+	jmp	.m_loop
+
+.m_return:
 	ret
 
 .TrieBuild:

@@ -77,3 +77,6 @@
         
         .globl Alphabet
         Alphabet: .string "abcdefghijklmnopqrstuvwxyz0123456789"
+
+        .globl Unknown
+        Unknown: .string "<?>"
