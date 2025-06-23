@@ -1,5 +1,5 @@
-.section .rodata
-	.trie: .bss 64
+.section .bss
+	.trie: .zero 64
 
 .section .bss
  	# Stores the current code in the message
@@ -16,26 +16,31 @@ Morse:
 .TrieBuild:
  	# r9  = Current morse code (address)
 	# r10 = Number of codes parsed already
+	# r11 = Alphabet character (goes along with r10)
 	leaq	Code(%rip), %r9
 	xorq	%r10, %r10
-	xorq	%r11, %r11
-	xorq	%rdi, %rdi
+	leaq	Alphabet(%rip), %r11
 .tb_loop:
 	cmpq	$36, %r10
 	je	.tb_return
 	movq	(%r9), %rdi
 	call	.TrieGet
-
-	movq	%rax, %rdi
-	movq	$60, %rax
-	syscall
-
+	# Getting rax position within the trie to set
+	# the r11th alphabet character in there
+	movq	%rax, %rbx
+	leaq	.trie(%rip), %rax
+	addq	%rbx, %rax
+	movzbl	(%r11), %edi
+	movb	%dil, (%rax)
+	incq	%r11
 	incq	%r10
 	addq	$8, %r9
 	jmp	.tb_loop
 .tb_return:
 	ret
 
+# This function gets the value within the trie of the code rdi holds
+# in the moment this function is called. Return is given via rax
 .TrieGet:
 	xorq	%rax, %rax
 	xorq	%rbx, %rbx
