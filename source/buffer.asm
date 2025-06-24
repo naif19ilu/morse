@@ -16,42 +16,44 @@
 # rsi = if equals rsi > 0 wirte only first rsi bytes, write whole rdi's content otherwise
 .globl BufWri
 BufWri:
-	movq    (.offset), %r14
-	leaq    .buffer(%rip), %r13
-	addq    %r14, %r13
-	xorq    %rcx, %rcx
+	movq	(.offset), %r14
+	leaq	.buffer(%rip), %r13
+	addq	%r14, %r13
+	xorq	%rcx, %rcx
 .bw_loop:
-        cmpq    $2048, %r14
-        je      .bw_full
-        cmpq    %rsi, %rcx
-        je      .bw_return
-        movzbl  (%rdi), %r15d
-        cmpb    $0, %r15b
-        je      .bw_return
-        movb    %r15b, (%r13)
-        incq    %r14
-        incq    %r13
-        incq    %rdi
+	cmpq	$1, %r14
+	je	.bw_full
+	cmpq	%rsi, %rcx
+	jge	.bw_return
+	movzbl	(%rdi), %r15d
+	cmpb	$0, %r15b
+	je	.bw_return
+	movb	%r15b, (%r13)
+	incq	%r14
+	incq	%r13
+	incq	%rdi
 	incq	%rcx
-        jmp     .bw_loop
+	jmp	.bw_loop
 .bw_return:
-        movq    %r14, (.offset)
-        ret
+	movq	%r14, (.offset)
+	ret
 .bw_full:
-        pushq   %rdi
-        call    BufPuts
-        popq    %rdi
-        movq    (.offset), %r14
-        leaq    .buffer(%rip), %r13
-        jmp     .bw_loop
+	pushq	%rsi
+	pushq	%rdi
+	movq	$4, (.offset)
+	call 	BufPuts
+	popq	%rdi
+	popq	%rsi
+	movq	(.offset), %r14
+	leaq	.buffer(%rip), %r13
+	jmp	.bw_loop
 
 .globl BufPuts
-
 BufPuts:
-        leaq    .buffer(%rip), %rsi
-        movq    (.offset), %rdx
-        movq    $1, %rax
-        movq    $1, %rdi
-        syscall
-        movq    $0, (.offset)
-        ret
+	leaq	.buffer(%rip), %rsi
+	movq	(.offset), %rdx
+	movq	$1, %rax
+	movq	$1, %rdi
+	syscall
+	movq	$0, (.offset)
+	ret
