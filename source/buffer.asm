@@ -20,11 +20,18 @@ BufWri:
 	leaq	.buffer(%rip), %r13
 	addq	%r14, %r13
 	xorq	%rcx, %rcx
+	cmpq	$1, %rsi
+	je	.bf_1
+	jmp	.bw_loop
+.bf_1:
+	movzbl	(%rdi), %eax
+	movb	%al, (%r13)
+	incq	%r14
+	movq	%r14, (.offset)
+	ret
 .bw_loop:
-	cmpq	$1, %r14
+	cmpq	$2048, %r14
 	je	.bw_full
-	cmpq	%rsi, %rcx
-	jge	.bw_return
 	movzbl	(%rdi), %r15d
 	cmpb	$0, %r15b
 	je	.bw_return
@@ -47,6 +54,7 @@ BufWri:
 	movq	(.offset), %r14
 	leaq	.buffer(%rip), %r13
 	jmp	.bw_loop
+
 
 .globl BufPuts
 BufPuts:

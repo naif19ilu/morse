@@ -18,23 +18,26 @@ Text:
 	call	.GetOffset
 	movq	%rax, %rbx
 	leaq	Code(%rip), %rax
-	movq	(%rax, %rbx, 8), %rsi
+	movq	(%rax, %rbx, 8), %rdi
+	movq	$2048, %rsi
+	call	BufWri
 
+	leaq	Useful(%rip), %rdi
+	movq	$1, %rsi
+	call	BufWri
 
 	jmp	.t_resume
 .t_unknown:
-	# print the character as it is
-	movq	$1, %rax
-	movq	$1, %rdi
-	movq	%r8, %rsi
-	movq	$1, %rdx
-	syscall
+	movq	%r8, %rdi
+	movq	$1, %rsi
+	call	BufWri
 	jmp	.t_resume
 .t_resume:
 	incq	%r8
 	jmp	.t_loop
 .t_return:
 	ret
+
 .MorseAble:
 	cmpb	$'0', %dil
 	jl	.ma_no
