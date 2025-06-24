@@ -5,7 +5,7 @@
     we print the usage which indicates the correct form. Once we know the program has
     a mode specified and a proper message to encode/decode we call the respective function.
 
-    For morse function we use a trie data structure to index the the codes in a quick way,
+    For morse function we use a trie data structure to index the codes in a quick way,
     here's how:
 
     We know all morse codes are combinations of dots and dashes, therefore we can use this
@@ -19,7 +19,7 @@
     for '.-' which is 'a' the hash gives us 4, then in the 4th position within an array we will
     store 'a' character
 
-    we also know no morse code is longer than 5 characters, we can store 8 bytes to reconstruct
+    We also know no morse code is longer than 5 characters, we can store 8 bytes to reconstruct
     the current character being read and whenever we hit a whitespace ' ' or the code is 5 bytes
     long we process this code by getting its hash and printing whatever it represents, if it does
     not represent anything we print <?> to indicate the user they made a typo.
@@ -35,5 +35,5 @@
     to a buffer and when the program has finished the translating part just print what's within
     the buffer.
 
-    and that's it :)
+    And that's it :)
 
