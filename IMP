@@ -1,0 +1,39 @@
+
+    This file describes the project implementation.
+
+    First we need to know if the program was executed as it should, if it was not, then
+    we print the usage which indicates the correct form. Once we know the program has
+    a mode specified and a proper message to encode/decode we call the respective function.
+
+    For morse function we use a trie data structure to index the the codes in a quick way,
+    here's how:
+
+    We know all morse codes are combinations of dots and dashes, therefore we can use this
+    to make a hash, something like this:
+
+    hash = 0
+    if c == '.' then hash = 2 * hash + 1
+    else        then hash = 2 * hash + 2
+
+    in this way we are gonna create a unique hash for all characters (a-z) and (0-9), for example
+    for '.-' which is 'a' the hash gives us 4, then in the 4th position within an array we will
+    store 'a' character
+
+    we also know no morse code is longer than 5 characters, we can store 8 bytes to reconstruct
+    the current character being read and whenever we hit a whitespace ' ' or the code is 5 bytes
+    long we process this code by getting its hash and printing whatever it represents, if it does
+    not represent anything we print <?> to indicate the user they made a typo.
+
+    Now text function is a bit easier since we define the whole morse code set into 'data.asm'
+    in the order the alphabet goes followed by 0 through 9, now as we read the message to be
+    encoded the program finds out if the current character is morseable (has a representation),
+    if it is then just get the offset within the array and print the morse code, if it is not
+    print <?> instead.
+
+    Both functions, morse and text use a buffer to write their output to since doing a syscall
+    per each character/code would be too expensive for the OS, so it is better to write all
+    to a buffer and when the program has finished the translating part just print what's within
+    the buffer.
+
+    and that's it :)
+
