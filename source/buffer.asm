@@ -21,8 +21,14 @@ BufWri:
 	addq	%r14, %r13
 	xorq	%rcx, %rcx
 	cmpq	$1, %rsi
-	je	.bf_1
-	jmp	.bw_loop
+	jne	.bw_loop
+	cmpq	$2048, %r14
+	jl	.bf_1
+	pushq	%rdi
+	call	BufPuts
+	popq	%rdi
+	movq	(.offset), %r14
+	leaq	.buffer(%rip), %r13
 .bf_1:
 	movzbl	(%rdi), %eax
 	movb	%al, (%r13)

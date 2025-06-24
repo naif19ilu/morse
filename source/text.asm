@@ -21,17 +21,22 @@ Text:
 	movq	(%rax, %rbx, 8), %rdi
 	movq	$2048, %rsi
 	call	BufWri
-
 	leaq	Useful(%rip), %rdi
 	movq	$1, %rsi
 	call	BufWri
-
 	jmp	.t_resume
 .t_unknown:
+	cmpb	$' ', %dil
+	je	.t_space
 	movq	%r8, %rdi
 	movq	$1, %rsi
 	call	BufWri
 	jmp	.t_resume
+.t_space:
+	leaq	Useful(%rip), %rdi
+	addq	$2, %rdi
+	movq	$1, %rsi
+	call	BufWri
 .t_resume:
 	incq	%r8
 	jmp	.t_loop
@@ -73,7 +78,7 @@ Text:
 	jmp	.go_return
 .go_number:
 	subb	$'0', %dil
-	addb	$25, %dil
+	addb	$26, %dil
 .go_return:
 	movb	%dil, %al
 	cltq
