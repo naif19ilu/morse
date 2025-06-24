@@ -1,0 +1,15 @@
+
+    morse - encoder and decoder
+
+    Tiny practice on x86_64 assembly language. To use the program just run
+
+    $ cd source    
+    $ make
+    $ ./morse [mode] "message"
+
+    mode can either be 'm' for going from morse to text or 't' to do the
+    opposite :)
+
+    naif19ta 
+    24 Jun 2025
+

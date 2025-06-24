@@ -4,6 +4,8 @@
 
 .section .text
 
+.include "macros.inc"
+
 .globl Text
 
 Text:
@@ -19,7 +21,7 @@ Text:
 	movq	%rax, %rbx
 	leaq	Code(%rip), %rax
 	movq	(%rax, %rbx, 8), %rdi
-	movq	$2048, %rsi
+	movq	$-1, %rsi
 	call	BufWri
 	leaq	Useful(%rip), %rdi
 	movq	$1, %rsi
@@ -28,9 +30,7 @@ Text:
 .t_unknown:
 	cmpb	$' ', %dil
 	je	.t_space
-	movq	%r8, %rdi
-	movq	$1, %rsi
-	call	BufWri
+	UNKCHR
 	jmp	.t_resume
 .t_space:
 	leaq	Useful(%rip), %rdi
@@ -58,10 +58,9 @@ Text:
 	jle	.ma_si
 .ma_no:
 	movq	$0, %rax
-	jmp	.ma_return
+	ret
 .ma_si:
 	movq	$1, %rax
-.ma_return:
 	ret
 
 .GetOffset:
