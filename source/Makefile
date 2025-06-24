@@ -1,4 +1,4 @@
-objs = main.o morse.o text.o data.o
+objs = main.o morse.o text.o data.o buffer.o
 name = morse
 
 all: $(name)

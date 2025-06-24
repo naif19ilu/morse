@@ -1,3 +1,8 @@
+# Morse - encoder and decoder
+# 23 Jun 2025
+# This file contains information that text.asm
+# and morse.asm might use
+
 .section .rodata
         ._a: .string ".-"
         ._b: .string "-..."

@@ -1,3 +1,7 @@
+# Morse - encoder and decoder
+# 23 Jun 2025
+# This file is the program's starting point
+
 .section .rodata
 	.usage_msg: .string "morse-usage: morse [mode] [message]\n"
 	.usage_len: .quad    36
@@ -31,6 +35,7 @@ _start:
 	call	Text
 	jmp	.leave
 .leave:
+	call	BufPuts
 	PUTU	$1
 	EXIT	$0
 .usage:

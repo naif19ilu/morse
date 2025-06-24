@@ -1,3 +1,7 @@
+# Morse - encoder and decoder
+# 23 Jun 2025
+# This file handles morse parsing
+
 .section .bss
 	.trie: .zero 64
 	.code: .zero 8
@@ -27,7 +31,7 @@ Morse:
 	je	.m_complete
 	cmpb	$'/', %dil
 	je	.m_space
-	PUTS	$1, Unknown(%rip), $3
+	UNKCHR
 	jmp	.m_resume
 .m_store:
 	cmpq	$5, %r9
@@ -42,17 +46,17 @@ Morse:
 	movq	%rax, %rbx
 	leaq	.trie(%rip), %rax
 	addq	%rbx, %rax
-	movq	%rax, %rsi
-	movq	$1, %rax
-	movq	$1, %rdi
-	movq	$1, %rdx
-	syscall
+	movq	%rax, %rdi
+	movq	$1, %rsi
+	call	BufWri
 	movq	$0, (.code)
 	leaq	.code(%rip), %r10
 	xorq	%r9, %r9
 	jmp	.m_resume
 .m_space:
-	PUTU	$0
+	leaq	Useful(%rip), %rdi
+	movq	$1, %rsi
+	call	BufWri
 .m_resume:
 	incq	%r8
 	jmp	.m_loop

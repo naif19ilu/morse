@@ -1,3 +1,8 @@
+# Morse - encoder and decoder
+# 23 Jun 2025
+# This file contains macros that text.asm, main.asm
+# and morse.asm might use
+
 .macro PUTS fd, msg, len
 	leaq	\msg, %rsi
 	movq	\len, %rdx
@@ -19,4 +24,10 @@
 	movq	$1, %rdi
 	movq	$1, %rdx
 	syscall
+.endm
+
+.macro UNKCHR
+	leaq	Unknown(%rip), %rdi
+	movq	$-1, %rsi
+	call	BufWri
 .endm
