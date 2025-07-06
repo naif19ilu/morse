@@ -3,7 +3,7 @@
 
     Tiny practice on x64 assembly language. To use the program just run
 
-    $ cd source    
+    $ cd source
     $ make
     $ ./morse [mode] "message"
 
